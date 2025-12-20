@@ -1,0 +1,416 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+
+class Ogrenci {
+    private String ad;
+    private String soyad;
+    private String numara;
+    private ArrayList<Ders> dersler;
+    
+    public Ogrenci(String ad, String soyad, String numara) {
+        this.ad = ad;
+        this.soyad = soyad;
+        this.numara = numara;
+        this.dersler = new ArrayList<>();
+    }
+    
+    public void dersEkle(Ders ders) {
+        dersler.add(ders);
+    }
+    
+    public double ortalamaHesapla() {
+        if (dersler.isEmpty()) return 0;
+        double toplam = 0;
+        for (Ders ders : dersler) {
+            toplam += ders.getOrtalama();
+        }
+        return toplam / dersler.size();
+    }
+    
+    public String getAd() { return ad; }
+    public String getSoyad() { return soyad; }
+    public String getNumara() { return numara; }
+    public ArrayList<Ders> getDersler() { return dersler; }
+    public String getAdSoyad() { return ad + " " + soyad; }
+}
+
+class Ders {
+    private String dersAdi;
+    private double vize;
+    private double final_notu;
+    private double odev;
+    
+    public Ders(String dersAdi, double vize, double final_notu, double odev) {
+        this.dersAdi = dersAdi;
+        this.vize = vize;
+        this.final_notu = final_notu;
+        this.odev = odev;
+    }
+    
+    public double getOrtalama() {
+        return (vize * 0.3) + (final_notu * 0.5) + (odev * 0.2);
+    }
+    
+    public String getHarfNotu() {
+        double ort = getOrtalama();
+        if (ort >= 90) return "AA";
+        else if (ort >= 85) return "BA";
+        else if (ort >= 80) return "BB";
+        else if (ort >= 75) return "CB";
+        else if (ort >= 70) return "CC";
+        else if (ort >= 65) return "DC";
+        else if (ort >= 60) return "DD";
+        else if (ort >= 50) return "FD";
+        else return "FF";
+    }
+    
+    public String getDurum() {
+        return getOrtalama() >= 60 ? "GEÇTİ" : "KALDI";
+    }
+    
+    public String getDersAdi() { return dersAdi; }
+    public double getVize() { return vize; }
+    public double getFinalNotu() { return final_notu; }
+    public double getOdev() { return odev; }
+}
+
+public class OgrenciNotSistemi {
+    private static ArrayList<Ogrenci> ogrenciler = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+    
+    public static void main(String[] args) {
+        // Demo veriler ekle
+        demoVerilerEkle();
+        
+        System.out.println("╔═══════════════════════════════════════════╗");
+        System.out.println("║   ÖĞRENCİ NOT YÖNETİM SİSTEMİNE HOŞ GELDİNİZ   ║");
+        System.out.println("╚═══════════════════════════════════════════╝");
+        
+        boolean devam = true;
+        while (devam) {
+            devam = anaMenu();
+        }
+        
+        System.out.println("\n👋 Programdan çıkılıyor. İyi günler!");
+        scanner.close();
+    }
+    
+    private static void demoVerilerEkle() {
+        Ogrenci ogr1 = new Ogrenci("Ahmet", "Yılmaz", "2021001");
+        ogr1.dersEkle(new Ders("Matematik", 75, 80, 90));
+        ogr1.dersEkle(new Ders("Fizik", 70, 75, 85));
+        ogr1.dersEkle(new Ders("Kimya", 65, 70, 80));
+        ogrenciler.add(ogr1);
+        
+        Ogrenci ogr2 = new Ogrenci("Ayşe", "Demir", "2021002");
+        ogr2.dersEkle(new Ders("Matematik", 90, 95, 100));
+        ogr2.dersEkle(new Ders("Fizik", 85, 90, 95));
+        ogrenciler.add(ogr2);
+    }
+    
+    private static boolean anaMenu() {
+        System.out.println("\n╔═══════════════════════════════════════════╗");
+        System.out.println("║              ANA MENÜ                     ║");
+        System.out.println("╠═══════════════════════════════════════════╣");
+        System.out.println("║  1. 👤 Yeni Öğrenci Ekle                  ║");
+        System.out.println("║  2. 📝 Öğrenciye Ders Notu Ekle           ║");
+        System.out.println("║  3. 📊 Öğrenci Listesi                    ║");
+        System.out.println("║  4. 📋 Öğrenci Detaylı Rapor              ║");
+        System.out.println("║  5. 🏆 Sınıf Genel Durumu                 ║");
+        System.out.println("║  6. 🔍 Öğrenci Ara                        ║");
+        System.out.println("║  7. 📈 En Başarılı Öğrenciler             ║");
+        System.out.println("║  8. 🚪 Çıkış                              ║");
+        System.out.println("╚═══════════════════════════════════════════╝");
+        System.out.print("\nSeçiminiz (1-8): ");
+        
+        int secim = 0;
+        try {
+            secim = scanner.nextInt();
+            scanner.nextLine();
+        } catch (Exception e) {
+            scanner.nextLine();
+            System.out.println("❌ Geçersiz giriş!");
+            return true;
+        }
+        
+        switch (secim) {
+            case 1: yeniOgrenciEkle(); break;
+            case 2: dersNotuEkle(); break;
+            case 3: ogrenciListesi(); break;
+            case 4: ogrenciDetayliRapor(); break;
+            case 5: sinifGenelDurum(); break;
+            case 6: ogrenciAra(); break;
+            case 7: enBasariliOgrenciler(); break;
+            case 8: return false;
+            default: System.out.println("❌ Geçersiz seçim!");
+        }
+        
+        return true;
+    }
+    
+    private static void yeniOgrenciEkle() {
+        System.out.println("\n╔═══════════════════════════════════════════╗");
+        System.out.println("║         YENİ ÖĞRENCİ EKLEME               ║");
+        System.out.println("╚═══════════════════════════════════════════╝");
+        
+        System.out.print("👤 Öğrenci Adı: ");
+        String ad = scanner.nextLine();
+        
+        System.out.print("👤 Öğrenci Soyadı: ");
+        String soyad = scanner.nextLine();
+        
+        System.out.print("🔢 Öğrenci Numarası: ");
+        String numara = scanner.nextLine();
+        
+        // Numara kontrolü
+        for (Ogrenci ogr : ogrenciler) {
+            if (ogr.getNumara().equals(numara)) {
+                System.out.println("❌ Bu numarada bir öğrenci zaten kayıtlı!");
+                return;
+            }
+        }
+        
+        Ogrenci yeniOgrenci = new Ogrenci(ad, soyad, numara);
+        ogrenciler.add(yeniOgrenci);
+        System.out.println("✅ Öğrenci başarıyla eklendi!");
+        System.out.println("📌 " + ad + " " + soyad + " - " + numara);
+    }
+    
+    private static void dersNotuEkle() {
+        System.out.println("\n╔═══════════════════════════════════════════╗");
+        System.out.println("║         DERS NOTU EKLEME                  ║");
+        System.out.println("╚═══════════════════════════════════════════╝");
+        
+        if (ogrenciler.isEmpty()) {
+            System.out.println("❌ Sistemde kayıtlı öğrenci bulunmamaktadır!");
+            return;
+        }
+        
+        System.out.print("🔢 Öğrenci Numarası: ");
+        String numara = scanner.nextLine();
+        
+        Ogrenci ogrenci = ogrenciBul(numara);
+        if (ogrenci == null) {
+            System.out.println("❌ Öğrenci bulunamadı!");
+            return;
+        }
+        
+        System.out.println("👤 Öğrenci: " + ogrenci.getAdSoyad());
+        System.out.print("\n📚 Ders Adı: ");
+        String dersAdi = scanner.nextLine();
+        
+        try {
+            System.out.print("📝 Vize Notu (0-100): ");
+            double vize = scanner.nextDouble();
+            
+            System.out.print("📝 Final Notu (0-100): ");
+            double finalNotu = scanner.nextDouble();
+            
+            System.out.print("📝 Ödev Notu (0-100): ");
+            double odev = scanner.nextDouble();
+            scanner.nextLine();
+            
+            if (vize < 0 || vize > 100 || finalNotu < 0 || finalNotu > 100 || odev < 0 || odev > 100) {
+                System.out.println("❌ Notlar 0-100 arasında olmalıdır!");
+                return;
+            }
+            
+            Ders yeniDers = new Ders(dersAdi, vize, finalNotu, odev);
+            ogrenci.dersEkle(yeniDers);
+            
+            System.out.println("\n✅ Ders notu başarıyla eklendi!");
+            System.out.printf("📊 Ortalama: %.2f\n", yeniDers.getOrtalama());
+            System.out.println("📝 Harf Notu: " + yeniDers.getHarfNotu());
+            System.out.println("✔️ Durum: " + yeniDers.getDurum());
+            
+        } catch (Exception e) {
+            scanner.nextLine();
+            System.out.println("❌ Geçersiz not girişi!");
+        }
+    }
+    
+    private static void ogrenciListesi() {
+        System.out.println("\n╔═══════════════════════════════════════════════════════════════╗");
+        System.out.println("║                    ÖĞRENCİ LİSTESİ                            ║");
+        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
+        
+        if (ogrenciler.isEmpty()) {
+            System.out.println("❌ Sistemde kayıtlı öğrenci bulunmamaktadır!");
+            return;
+        }
+        
+        System.out.println("\n" + "─".repeat(65));
+        System.out.printf("%-15s %-20s %-15s %-10s\n", "NUMARA", "AD SOYAD", "DERS SAYISI", "ORTALAMA");
+        System.out.println("─".repeat(65));
+        
+        for (Ogrenci ogr : ogrenciler) {
+            System.out.printf("%-15s %-20s %-15d %.2f\n", 
+                ogr.getNumara(), 
+                ogr.getAdSoyad(), 
+                ogr.getDersler().size(),
+                ogr.ortalamaHesapla());
+        }
+        System.out.println("─".repeat(65));
+        System.out.println("📌 Toplam Öğrenci Sayısı: " + ogrenciler.size());
+    }
+    
+    private static void ogrenciDetayliRapor() {
+        System.out.println("\n╔═══════════════════════════════════════════╗");
+        System.out.println("║      ÖĞRENCİ DETAYLI RAPOR                ║");
+        System.out.println("╚═══════════════════════════════════════════╝");
+        
+        System.out.print("🔢 Öğrenci Numarası: ");
+        String numara = scanner.nextLine();
+        
+        Ogrenci ogrenci = ogrenciBul(numara);
+        if (ogrenci == null) {
+            System.out.println("❌ Öğrenci bulunamadı!");
+            return;
+        }
+        
+        System.out.println("\n" + "═".repeat(80));
+        System.out.println("👤 Öğrenci: " + ogrenci.getAdSoyad());
+        System.out.println("🔢 Numara: " + ogrenci.getNumara());
+        System.out.println("═".repeat(80));
+        
+        if (ogrenci.getDersler().isEmpty()) {
+            System.out.println("❌ Bu öğrencinin henüz ders notu bulunmamaktadır!");
+            return;
+        }
+        
+        System.out.println("\n📚 DERS NOTLARI:");
+        System.out.println("─".repeat(80));
+        System.out.printf("%-20s %-8s %-8s %-8s %-10s %-8s %-10s\n", 
+            "DERS ADI", "VİZE", "FİNAL", "ÖDEV", "ORTALAMA", "HARF", "DURUM");
+        System.out.println("─".repeat(80));
+        
+        for (Ders ders : ogrenci.getDersler()) {
+            System.out.printf("%-20s %-8.0f %-8.0f %-8.0f %-10.2f %-8s %-10s\n",
+                ders.getDersAdi(),
+                ders.getVize(),
+                ders.getFinalNotu(),
+                ders.getOdev(),
+                ders.getOrtalama(),
+                ders.getHarfNotu(),
+                ders.getDurum());
+        }
+        
+        System.out.println("─".repeat(80));
+        System.out.printf("🎯 GENEL ORTALAMA: %.2f\n", ogrenci.ortalamaHesapla());
+        System.out.println("═".repeat(80));
+    }
+    
+    private static void sinifGenelDurum() {
+        System.out.println("\n╔═══════════════════════════════════════════╗");
+        System.out.println("║        SINIF GENEL DURUMU                 ║");
+        System.out.println("╚═══════════════════════════════════════════╝");
+        
+        if (ogrenciler.isEmpty()) {
+            System.out.println("❌ Sistemde kayıtlı öğrenci bulunmamaktadır!");
+            return;
+        }
+        
+        double toplamOrtalama = 0;
+        int gecenSayisi = 0;
+        int kalanSayisi = 0;
+        double enYuksek = 0;
+        double enDusuk = 100;
+        
+        for (Ogrenci ogr : ogrenciler) {
+            if (ogr.getDersler().isEmpty()) continue;
+            
+            double ort = ogr.ortalamaHesapla();
+            toplamOrtalama += ort;
+            
+            if (ort >= 60) gecenSayisi++;
+            else kalanSayisi++;
+            
+            if (ort > enYuksek) enYuksek = ort;
+            if (ort < enDusuk) enDusuk = ort;
+        }
+        
+        double sinifOrtalamasi = toplamOrtalama / ogrenciler.size();
+        
+        System.out.println("\n📊 İSTATİSTİKLER:");
+        System.out.println("─".repeat(40));
+        System.out.println("👥 Toplam Öğrenci: " + ogrenciler.size());
+        System.out.println("✅ Geçen Öğrenci: " + gecenSayisi);
+        System.out.println("❌ Kalan Öğrenci: " + kalanSayisi);
+        System.out.printf("📈 Sınıf Ortalaması: %.2f\n", sinifOrtalamasi);
+        System.out.printf("🏆 En Yüksek Ortalama: %.2f\n", enYuksek);
+        System.out.printf("📉 En Düşük Ortalama: %.2f\n", enDusuk);
+        System.out.println("─".repeat(40));
+    }
+    
+    private static void ogrenciAra() {
+        System.out.println("\n╔═══════════════════════════════════════════╗");
+        System.out.println("║           ÖĞRENCİ ARAMA                   ║");
+        System.out.println("╚═══════════════════════════════════════════╝");
+        
+        System.out.print("🔍 Öğrenci adı veya soyadı girin: ");
+        String arama = scanner.nextLine().toLowerCase();
+        
+        boolean bulundu = false;
+        System.out.println("\n📋 ARAMA SONUÇLARI:");
+        System.out.println("─".repeat(60));
+        
+        for (Ogrenci ogr : ogrenciler) {
+            if (ogr.getAd().toLowerCase().contains(arama) || 
+                ogr.getSoyad().toLowerCase().contains(arama)) {
+                System.out.printf("👤 %s - %s (Ortalama: %.2f)\n", 
+                    ogr.getAdSoyad(), ogr.getNumara(), ogr.ortalamaHesapla());
+                bulundu = true;
+            }
+        }
+        
+        if (!bulundu) {
+            System.out.println("❌ Eşleşen öğrenci bulunamadı!");
+        }
+        System.out.println("─".repeat(60));
+    }
+    
+    private static void enBasariliOgrenciler() {
+        System.out.println("\n╔═══════════════════════════════════════════╗");
+        System.out.println("║      EN BAŞARILI ÖĞRENCİLER               ║");
+        System.out.println("╚═══════════════════════════════════════════╝");
+        
+        if (ogrenciler.isEmpty()) {
+            System.out.println("❌ Sistemde kayıtlı öğrenci bulunmamaktadır!");
+            return;
+        }
+        
+        // Öğrencileri ortalamaya göre sırala
+        ArrayList<Ogrenci> siraliListe = new ArrayList<>(ogrenciler);
+        siraliListe.sort((o1, o2) -> Double.compare(o2.ortalamaHesapla(), o1.ortalamaHesapla()));
+        
+        System.out.println("\n🏆 TOP 5 ÖĞRENCİ:");
+        System.out.println("─".repeat(60));
+        
+        int sayac = 0;
+        for (Ogrenci ogr : siraliListe) {
+            if (ogr.getDersler().isEmpty()) continue;
+            
+            sayac++;
+            String madalya = "";
+            if (sayac == 1) madalya = "🥇";
+            else if (sayac == 2) madalya = "🥈";
+            else if (sayac == 3) madalya = "🥉";
+            else madalya = "  ";
+            
+            System.out.printf("%s %d. %-25s %.2f\n", 
+                madalya, sayac, ogr.getAdSoyad(), ogr.ortalamaHesapla());
+            
+            if (sayac >= 5) break;
+        }
+        System.out.println("─".repeat(60));
+    }
+    
+    private static Ogrenci ogrenciBul(String numara) {
+        for (Ogrenci ogr : ogrenciler) {
+            if (ogr.getNumara().equals(numara)) {
+                return ogr;
+            }
+        }
+        return null;
+    }
+}
