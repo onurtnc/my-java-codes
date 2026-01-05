@@ -1,0 +1,20 @@
+# ATM Simulator (Java)
+
+Bu proje, **Java** kullanılarak geliştirilmiş **konsol tabanlı bir ATM simülasyonu**dur.  
+Gerçek bir ATM’nin temel işlevlerini taklit ederek kullanıcı etkileşimi, hata kontrolü ve işlem geçmişi yönetimini amaçlar.
+
+## 🚀 Özellikler
+- 🔐 Şifre doğrulama (3 deneme hakkı)
+- 💰 Bakiye sorgulama
+- 💵 Para yatırma (limit kontrollü)
+- 💸 Para çekme (hızlı seçim + özel tutar)
+- 📋 İşlem geçmişi (tarih & saat ile)
+- ℹ️ Hesap bilgilerini görüntüleme
+- 🔄 Şifre değiştirme
+- ❌ Hatalı girişler için koruma ve doğrulama
+
+## 🛠 Kullanılan Teknolojiler
+- Java SE
+- `Scanner` (kullanıcı girdileri)
+- `ArrayList` (işlem geçmişi)
+- `SimpleDateFormat` & `Date` (zaman damgası)
