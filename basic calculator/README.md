@@ -13,3 +13,9 @@ It is designed to perform basic arithmetic operations and receive input from the
 
 ## Requirements
 - Java JDK 8 or higher
+
+## How to Run
+```bash
+javac Calculator.java
+java Calculator
+```

@@ -18,3 +18,9 @@ It aims to mimic the core functionalities of a real ATM, focusing on user intera
 - `Scanner` (user input handling)
 - `ArrayList` (transaction history storage)
 - `SimpleDateFormat` & `Date` (timestamp handling)
+
+## How to Run
+```bash
+javac ATMSimulator.java
+java ATMSimulator
+```

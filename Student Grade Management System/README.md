@@ -20,3 +20,9 @@ It allows managing students, courses, grades, and generating detailed academic r
 - `Scanner` for user input
 - `ArrayList` for data storage
 - Object-Oriented Programming (OOP)
+
+## How to Run
+```bash
+javac StudentGradeManagementSystem.java
+java StudentGradeManagementSystem
+```
